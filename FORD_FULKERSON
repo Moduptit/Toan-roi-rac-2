@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 105;
+
+int cap[N][N];
+vector<int> adj[N];
+
+int bfs(int s, int t, vector<int>& par) {
+    fill(par.begin(), par.end(), -1);
+
+    queue<pair<int,int>> q;
+    q.push({s, 1e9});
+
+    par[s] = -2;
+
+    while (!q.empty()) {
+        auto [u, flow] = q.front();
+        q.pop();
+
+        for (int v : adj[u]) {
+            if (par[v] == -1 && cap[u][v] > 0) {
+
+                par[v] = u;
+
+                int new_flow =
+                    min(flow, cap[u][v]);
+
+                if (v == t)
+                    return new_flow;
+
+                q.push({v, new_flow});
+            }
+        }
+    }
+
+    return 0;
+}
+
+int maxflow(int s, int t, int n) {
+
+    int flow = 0, new_flow;
+
+    vector<int> par(n);
+
+    while (new_flow = bfs(s, t, par)) {
+
+        flow += new_flow;
+
+        int cur = t;
+
+        while (cur != s) {
+            int prev = par[cur];
+
+            cap[prev][cur] -= new_flow;
+            cap[cur][prev] += new_flow;
+
+            cur = prev;
+        }
+    }
+
+    return flow;
+}
+
+int main() {
+
+    return 0;
+}
